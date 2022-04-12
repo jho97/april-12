@@ -1,61 +1,61 @@
-const moviesContainer = document.querySelector('#movies-container')
+const housesContainer = document.querySelector('#houses-container')
 const form = document.querySelector('form')
 
-const baseURL = `http://localhost:4004/api/movies`
+const baseURL = `http://localhost:4004/api/houses`
 
-const moviesCallback = ({ data: movies }) => displayMovies(movies)
-const errCallback = err => console.log(err.response.data)
+const housesCallback = ({ data: houses }) => displayHouses(houses)
+const errCallback = err => console.log(err)
 
-const getAllMovies = () => axios.get(baseURL).then(moviesCallback).catch(errCallback)
-const createMovie = body => axios.post(baseURL, body).then(moviesCallback).catch(errCallback)
-const deleteMovie = id => axios.delete(`${baseURL}/${id}`).then(moviesCallback).catch(errCallback)
-const updateMovie = (id, type) => axios.put(`${baseURL}/${id}`, {type}).then(moviesCallback).catch(errCallback)
+const getAllHouses = () => axios.get(baseURL).then(housesCallback).catch(errCallback)
+const createHouse = body => axios.post(baseURL, body).then(housesCallback).catch(errCallback)
+const deleteHouse = id => axios.delete(`${baseURL}/${id}`).then(housesCallback).catch(errCallback)
+const updateHouse = (id, type) => axios.put(`${baseURL}/${id}`, {type}).then(housesCallback).catch(errCallback)
 
 function submitHandler(e) {
     e.preventDefault()
 
-    let title = document.querySelector('#title')
-    let rating = document.querySelector('input[name="ratings"]:checked')
+    let address = document.querySelector('#address')
+    let price = document.querySelector('#price')
     let imageURL = document.querySelector('#img')
 
     let bodyObj = {
-        title: title.value,
-        rating: rating.value, 
+        address: address.value,
+        price: +price.value, 
         imageURL: imageURL.value
     }
 
-    createMovie(bodyObj)
+    createHouse(bodyObj)
 
-    title.value = ''
-    rating.checked = false
+    address.value = ''
+    price.value = ''
     imageURL.value = ''
 }
 
-function createMovieCard(movie) {
-    const movieCard = document.createElement('div')
-    movieCard.classList.add('movie-card')
+function createHouseCard(house) {
+    const houseCard = document.createElement('div')
+    houseCard.classList.add('house-card')
 
-    movieCard.innerHTML = `<img alt='movie cover' src=${movie.imageURL} class="movie-cover"/>
-    <p class="movie-title">${movie.title}</p>
+    houseCard.innerHTML = `<img alt='house cover image' src=${house.imageURL} class="house-cover-image"/>
+    <p class="address">${house.address}</p>
     <div class="btns-container">
-        <button onclick="updateMovie(${movie.id}, 'minus')">-</button>
-        <p class="movie-rating">${movie.rating} stars</p>
-        <button onclick="updateMovie(${movie.id}, 'plus')">+</button>
+        <button onclick="updateHouse(${house.id}, 'minus')">-</button>
+        <p class="house-price">$${house.price}</p>
+        <button onclick="updateHouse(${house.id}, 'plus')">+</button>
     </div>
-    <button onclick="deleteMovie(${movie.id})">delete</button>
+    <button onclick="deleteHouse(${house.id})">delete</button>
     `
 
 
-    moviesContainer.appendChild(movieCard)
+    housesContainer.appendChild(houseCard)
 }
 
-function displayMovies(arr) {
-    moviesContainer.innerHTML = ``
+function displayHouses(arr) {
+    housesContainer.innerHTML = ``
     for (let i = 0; i < arr.length; i++) {
-        createMovieCard(arr[i])
+        createHouseCard(arr[i])
     }
 }
 
 form.addEventListener('submit', submitHandler)
 
-getAllMovies()
+getAllHouses()

@@ -1,40 +1,40 @@
-let movies = require('./db.json')
-let globalID = 11;
+let houses = require('./db.json')
+let globalID= houses.length +1;
 
 module.exports = {
-    getMovies: (req, res) => {
-        res.status(200).send(movies)
+    getHouses: (req, res) => {
+        res.status(200).send(houses)
     },
-    deleteMovie: (req, res) => {
-        let index = movies.findIndex(elem => elem.id === +req.params.id)
-        movies.splice(index, 1);
-        res.status(200).send(movies);
+    deleteHouse: (req, res) => {
+        let index = houses.findIndex(elem => elem.id === +req.params.id)
+        houses.splice(index, 1);
+        res.status(200).send(houses);
     },
-    createMovie: (req, res) => {
-        const{title, rating, imageURL} = req.body;
-        let newMovie = {
-            id: globalID,
-            title, 
-            rating,
+    createHouse: (req, res) => {
+        const{address, price, imageURL} = req.body;
+        let  newHouse = {
+            id:globalID,
+            address,
+            price,
             imageURL,
         }
-        movies.push(newMovie);
-        globalID++;
-        res.status(200).send(movies)
+        houses.push(newHouse)
+        globalID++
+        res.status(200).send(houses);
     },
-    updateMovie: (req, res) => {
-        const {id} = req.params;
-        const {type} = req.body;
-        let index = movies.findIndex(elem => elem.id === +req.params.id)
-        console.log(type);
-        if(type === 'minus' && movies[index].rating > 0) {
-            movies[index].rating -= 1;
-            res.status(200).send(movies);
-        } else if(type === 'plus' && movies[index].rating < 5) {
-            movies[index].rating += 1;
-            res.status(200).send(movies);
-            } else {
-                res.status(400).send('Something went wrong...')
-            }
+    updateHouse: (req, res) => {
+    const {id} = req.params;
+    const {type} = req.body;
+    let index = houses.findIndex(elem => elem.id === +id)
+    if(houses[index].price > 10000 && type === 'minus') {
+        houses[index].price -= 10000;
+        res.status(200).send(houses);
+    } else if (type === 'plus') {
+        houses[index].price += 10000;
+        res.status(200).send(houses);
+    } else {
+        res.status(400).send('error')
+    }
+
     }
 }
